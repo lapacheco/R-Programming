@@ -54,17 +54,15 @@ complete <- function (directory, id = 1:332) {
     
     library (stringr)
     
-    completes <- data.frame(matrix (ncol = 2, nrow = 0))
-    completes_colname <- c("id","nobs")
-    colnames(completes) <- completes_colname
+    completes <- data.frame(id = integer (), nobs = integer ())
     
     for (i in id) {
         pth <- paste(sep = "", getwd(),"/",directory,"/",str_pad(i,3,pad = "0"),".csv")
         mntr_file <- read.csv(pth)
         cmplts <- complete.cases(mntr_file)
         cmplts_len <- sum(cmplts)
-        
-        cmplts_add <- c(id, cmplts_len)
+
+        cmplts_add <- data.frame(id = i, nobs = cmplts_len)
         completes <- rbind (completes, cmplts_add)
     }
     
@@ -72,4 +70,18 @@ complete <- function (directory, id = 1:332) {
     
 }
 
-complete ("specdata", 30:26)
+complete ("specdata", 3)
+
+corr <- function (directory, threshold = 0) {
+    
+    ## 'directory' is a character vector of length 1 indicating
+    ## the location of the CSV files
+    ## 'threshold' is a numeric vector of length 1 indicating the number of completely observed observations (on all
+    ## variables )required to compute the correlation between nitrate and sulfate; the default is 0
+    
+    ## Return a numeric vector of correlations
+    ## NOTE: Do not round the result!
+    
+    
+    
+}
