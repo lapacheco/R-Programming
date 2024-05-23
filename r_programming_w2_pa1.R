@@ -15,8 +15,6 @@ pollutantmean <- function (directory, pollutant, id = 1:332) {
     
     library (stringr)
     
-    id_len = length(id)
-    
     all_mntr = c()
     
     for (i in id) {
@@ -37,7 +35,7 @@ pollutantmean <- function (directory, pollutant, id = 1:332) {
     
 }
 
-pollutantmean ("specdata","nitrate",23)
+# pollutantmean ("specdata","nitrate",23)
 
 complete <- function (directory, id = 1:332) {
     ## 'directory' is a character vector of length 1 indicating the location of the csv file
@@ -70,7 +68,7 @@ complete <- function (directory, id = 1:332) {
     
 }
 
-complete ("specdata", 3)
+# complete ("specdata", 332)
 
 corr <- function (directory, threshold = 0) {
     
@@ -82,6 +80,32 @@ corr <- function (directory, threshold = 0) {
     ## Return a numeric vector of correlations
     ## NOTE: Do not round the result!
     
+    library (stringr)
     
+    ids <- 1:332
+    pollutants <- c("sulfate","nitrate")
+    
+    allCrs <- c()
+    
+    for (i in ids) {
+        
+        pth <- paste(sep = "", getwd(),"/",directory,"/",str_pad(i,3,pad = "0"),".csv")
+        mntr_file <- read.csv(pth)
+        cmplts <- complete.cases(mntr_file)
+        cmplts_len <- sum(cmplts)
+        
+        if (cmplts_len > threshold) {
+        mntr_slft <- mntr_file["sulfate"]
+        mntr_ntrt <- mntr_file["nitrate"]
+
+        mntrFlCr <- cor (mntr_slft,mntr_ntrt, use = "complete.obs")
+        allCrs <- append(allCrs,mntrFlCr)
+        }
+        
+    }
+    
+    return (allCrs)
     
 }
+
+# cr <- corr("specdata")
